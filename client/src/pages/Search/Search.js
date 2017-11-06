@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { List, ListItem } from "../../components/List";
 import { FormBtn, Number, Term } from "../../components/Form";
+import SaveBtn from "../../components/SaveBtn";
 import API from "../../utils/API";
 
 class Search extends Component {
@@ -10,6 +11,12 @@ class Search extends Component {
 		numberRetrieve: "",
 		articles: []
 	};
+
+	componentDidMount() {
+    this.setState({
+			numberRetrieve: "1"
+		});
+  };
 	
 	handleInputChange = event => {
     const { name, value } = event.target;
@@ -23,6 +30,18 @@ class Search extends Component {
 		this.setState({
 			articles: truncArticles
 		});
+	};
+
+	addArticle = (url, headline, snippet) => {
+		if (headline) {
+			API.saveArticle({
+				headline: headline,
+				url: url,
+				snippet: snippet
+			})
+			.then(res => console.log("Saved."))
+			.catch(err => console.log(err));
+		}
 	};
 
 	handleFormSubmit = event => {
@@ -48,6 +67,7 @@ class Search extends Component {
 							placeholder = "Pokemon attack"
 						/>
 						<Number
+
 							onChange = {this.handleInputChange}
 							name = "numberRetrieve"
 						/>
@@ -61,24 +81,24 @@ class Search extends Component {
 				</div>
 				<br />
 				<div className = "container">
-					<div class="panel panel-default">
-						<div class="panel-heading">
-							<h3 class="panel-title">Results</h3>
+					<div className="panel panel-default">
+						<div className="panel-heading">
+							<h3 className="panel-title">Results</h3>
 						</div>
-					<div class="panel-body">
+					<div className="panel-body">
 						{this.state.articles.length ? (
               <List>
-                {this.state.articles.map(function(article, i){
+                {this.state.articles.map((article, i) => {
                   return (
                     <ListItem key = {i}>
-                      <a href={article.web_url}>
+                      <a href={article.web_url} target="_blank">
                         <strong>
                           {article.headline.main}
                         </strong>
                     	</a>
-                      <button className = "pull-right">
-												Save!
-											</button>
+                      <SaveBtn 
+												onClick = {() => this.addArticle(article.web_url, article.headline.main, article.snippet)}
+											/>
 											<p>
 												{article.snippet}
 											</p>
