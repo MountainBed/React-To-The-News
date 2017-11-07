@@ -15,20 +15,21 @@ class Search extends Component {
 	componentDidMount() {
     this.setState({
 			numberRetrieve: "1"
-		});
-  };
+		})
+  }
 	
 	handleInputChange = event => {
-    const { name, value } = event.target;
+		const { name, value } = event.target;
     this.setState({
       [name]: value
-    });
+		});
 	};
 	
 	updateArticleList = article => {
-		let truncArticles = article.splice(0,this.state.numberRetrieve);
+		let truncArticles = article.splice(0, this.state.numberRetrieve);
 		this.setState({
-			articles: truncArticles
+			articles: truncArticles,
+			searchTerm: "",
 		});
 	};
 
@@ -43,13 +44,11 @@ class Search extends Component {
 			.catch(err => console.log(err));
 		}
 	};
-
+	
 	handleFormSubmit = event => {
 		event.preventDefault();
 		if (this.state.searchTerm && this.state.numberRetrieve) {
-			API.articleQuery({
-				searchTerm: this.state.searchTerm
-			})
+			API.articleQuery(this.state.searchTerm)
 			.then(res => this.updateArticleList(res.data.response.docs))
 			.catch(err => console.log(err));
 		}
@@ -61,13 +60,11 @@ class Search extends Component {
 				<div className = "container">
 					<form>
 						<Term
-							defaultValue = {this.state.searchTerm}
 							onChange = {this.handleInputChange}
 							name = "searchTerm"
 							placeholder = "Pokemon attack"
 						/>
 						<Number
-
 							onChange = {this.handleInputChange}
 							name = "numberRetrieve"
 						/>

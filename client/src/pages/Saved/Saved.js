@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { List, ListItem } from "../../components/List";
+import DeleteBtn from "../../components/DeleteBtn";
 import API from "../../utils/API";
 
 class Saved extends Component {
@@ -9,12 +10,22 @@ class Saved extends Component {
 	};
 	
 	componentDidMount() {
+		this.findArticles();
+	};
+
+	findArticles = () => {
 		API.getArticles({})
 		.then(res =>
 			this.setState({
 				articles: res.data
 			})
 		)
+		.catch(err => console.log(err));
+	};
+
+	removeArticle = id => {
+		API.deleteArticle(id)
+		.then(res => this.findArticles())
 		.catch(err => console.log(err));
 	};
 	
@@ -36,9 +47,9 @@ class Saved extends Component {
 												{article.headline}
 											</strong>
 										</a>
-										<button className = "pull-right">
-											Remove
-										</button>
+										<DeleteBtn 
+										onClick = {() => this.removeArticle(article._id)}
+										/>
 										<p>
 											{article.snippet}
 										</p>

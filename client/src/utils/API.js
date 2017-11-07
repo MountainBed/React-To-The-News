@@ -9,6 +9,9 @@ export default {
 	},
 	getArticles: function() {
 		return axios.get("/api/article");
+	},
+	deleteArticle: function(id) {
+		return axios.delete("/api/article/" + id);
 	}
 }
 
